@@ -1,17 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Turnstone from "turnstone";
-// `app/page.js` is the UI for the `/` URL
 
 export default function Page() {
   const [query, setQuery] = useState(""),
     [results, setResults] = useState([]),
     [distance, setDistance] = useState(10),
-    [isSent, setIsSent] = useState(false);
+    [isSent, setIsSent] = useState(false),
+    [lat, setLat] = useState(0),
+    [lng, setLng] = useState(0);
 
   let distanceArray = [5, 10, 25, 50, 100];
+  console.log("yo");
+  useEffect(() => {
+    if (navigator?.geolocation && lat === 0 && lng === 0) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log(position);
+      });
+    }
+  }, []);
 
   const searchSelected = async (selectedItem, displayName) => {
+    setResults([]);
     if (isSent === false) {
       console.log(selectedItem);
       if (selectedItem) {
@@ -33,22 +43,10 @@ export default function Page() {
     searchType: "contains",
     minQueryLength: 3,
     data: async (query) => {
-      //   let data = await (
-      //     await fetch(`https://geocode.maps.co/search?q=${query}`)
-      //   ).json();
-      //       return data.map((d) => { { name: d.display_name, shape: d.boundingbox } });
-
       return await (
         await fetch(`https://geocode.maps.co/search?q=${query}`)
       ).json();
     },
-  };
-
-  const getGames = async (e) => {
-    e.preventDefault();
-    setResults(
-      await (await fetch(`https://geocode.maps.co/search?q=${query}`)).json()
-    );
   };
 
   const styles = {
@@ -74,7 +72,8 @@ export default function Page() {
     <>
       <div className="flex gap-4">
         <div>
-          <Turnstone
+          {/* <Turnstone
+            autofocus={true}
             cancelButton={true}
             clearButton={true}
             debounceWait={250}
@@ -85,11 +84,11 @@ export default function Page() {
             maxItems={10}
             name="search"
             noItemsMessage="We found no places that match your search"
-            placeholder="Enter a city or airport"
+            placeholder="Search for a location"
             styles={styles}
             typeahead={true}
             onSelect={searchSelected}
-          />
+          /> */}
           {results && (
             <ul>
               {results.map((game) => (
