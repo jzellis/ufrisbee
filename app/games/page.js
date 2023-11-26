@@ -72,7 +72,7 @@ export default function Page() {
     <>
       <div className="flex gap-4">
         <div>
-          {/* <Turnstone
+          <Turnstone
             autofocus={true}
             cancelButton={true}
             clearButton={true}
@@ -88,7 +88,7 @@ export default function Page() {
             styles={styles}
             typeahead={true}
             onSelect={searchSelected}
-          /> */}
+          />
           {results && (
             <ul>
               {results.map((game) => (
